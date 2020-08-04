@@ -1,3 +1,53 @@
+### # 2020/07/31
+
+#### 1. 微信/iOS 字体缩放导致布局错乱的问题
+
+**解决方法**
+
+​	禁止字体缩放。
+
+```
+if (typeof WeixinJSBridge == 'undefined') {
+  document.addEventListener('WeixinJSBridgeReady', function(e) {
+    setTimeout(function() {
+      // 直接修改用户设置的/默认字体
+      WeixinJSBridge.invoke(
+        'setFontSizeCallback',
+        {
+          fontSize: 0
+        },
+        function(res) {}
+      );
+      // 重写设置网页字体大小的事件
+      WeixinJSBridge.on('menu:setfont', function() {
+        WeixinJSBridge.invoke('setFontSizeCallback', {
+          fontSize: 0
+        });
+      });
+    }, 0);
+  });
+} else {
+  setTimeout(function() {
+    WeixinJSBridge.invoke(
+      'setFontSizeCallback',
+      {
+        fontSize: 0
+      },
+      function(res) {}
+    );
+  }, 0);
+}
+ 
+// ios
+body {  
+ -webkit-text-size-adjust: 100% !important;  
+ text-size-adjust: 100% !important;  
+ -moz-text-size-adjust: 100% !important;  
+}
+```
+
+
+
 ### # 2020/07/30
 
 #### 1. 移动端使用 rem 布局，在部分华为机型上超出屏幕的问题

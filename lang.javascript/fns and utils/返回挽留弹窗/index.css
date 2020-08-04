@@ -1,0 +1,14 @@
+@import '../../../assets//styles//reset.css';
+@import '../../../assets//styles//common.css';
+
+button {
+  display: block;
+  width: 100px;
+  margin: 20px auto;
+}
+.detain-popup {
+  width: 30vw;
+  height: 50vh;
+  margin: 0 auto;
+  background-color: brown;
+}

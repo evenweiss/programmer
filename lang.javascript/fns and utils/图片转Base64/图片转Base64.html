@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ImgToBase64</title>
+    <style>
+      body {
+        margin: 0px;
+        background-color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="can" style="top: 0px; left: 0px;" width="100" height="100"></canvas>
+    <textarea id="code" style="width: 600px; height: 200px;"></textarea>
+    <input
+      id="uImg"
+      type="file"
+      name="file"
+      accept="image/*"
+      style="left: 0px; top: 0px; width: 300px; height: 100px; opacity: 1;"
+    />
+  </body>
+  <script>
+    var img, canvas, c2d;
+    inIt();
+    function inIt() {
+      canvas = document.getElementById('can');
+      if (canvas == null) {
+        alert("请使用支持'HTML5 CANVAS'的浏览器！");
+        return;
+      }
+      c2d = canvas.getContext('2d');
+      //
+      document.getElementById('uImg').addEventListener('change', function (e) {
+        var files = e.target.files,
+          file;
+        if (files && files.length > 0) {
+          // 获取目前上传的文件
+          file = files[0];
+          // 来在控制台看看到底这个对象是什么
+          console.log(file);
+          // 那么我们可以做一下诸如文件大小校验的动作
+          if (file.size > 1024 * 1024 * 2) {
+            alert('图片大小不能超过 2MB!');
+            return false;
+          }
+          var URL = window.URL || window.webkitURL;
+          var imgURL = URL.createObjectURL(file);
+          //
+          coding(imgURL);
+        }
+      });
+    }
+    function coding(_str) {
+      if (!img) {
+        img = new Image();
+      }
+      img.onload = function () {
+        if (img.width == 0) {
+          c2d.clearRect(0, 0, imgW.width, imgH.height);
+        }
+        canvas.width = img.width;
+        canvas.height = img.height;
+        c2d.drawImage(img, 0, 0, img.width, img.height);
+        //
+        var _base64 = canvas.toDataURL('image/png');
+        console.log(_base64.length);
+        if (_base64.length > 100000) {
+          document.getElementById('code').innerHTML = '图片数据较大，避免电脑卡死已自动隐藏字符串';
+        } else {
+          document.getElementById('code').innerHTML = _base64;
+        }
+      };
+      img.src = _str;
+    }
+  </script>
+</html>
